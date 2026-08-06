@@ -1,7 +1,7 @@
 {
   "name": "social-publish-kit",
   "version": "1.0.0",
-  "description": "Social-writing skills and a local browser workflow for drafting, validating, and optionally publishing Threads, Facebook, and LinkedIn posts.",
+  "description": "Social-writing and image-generation skills with a local browser workflow for drafting, validating, and optionally publishing Threads, Facebook, and LinkedIn posts.",
   "author": {
     "name": "Dawson Wang"
   },
@@ -12,13 +12,16 @@
     "skills",
     "threads",
     "facebook",
-    "linkedin"
+    "linkedin",
+    "image-generation",
+    "codex",
+    "gemini"
   ],
   "skills": "./skills",
   "interface": {
     "displayName": "Social Publish Kit",
-    "shortDescription": "Draft, validate, and optionally publish social posts.",
-    "longDescription": "A portable skill bundle for turning canonical source notes into Threads, Facebook, and LinkedIn drafts, cross-checking facts, proofreading Traditional Chinese, and running a gated local browser publishing workflow.",
+    "shortDescription": "Draft posts, render images, and publish with review gates.",
+    "longDescription": "A portable skill bundle for turning canonical source notes into Threads, Facebook, and LinkedIn drafts, cross-checking facts, proofreading Traditional Chinese, generating social image prompts, rendering PNGs through Codex or Gemini backends, and running a gated local browser publishing workflow.",
     "developerName": "Dawson Wang",
     "category": "Productivity",
     "capabilities": [
@@ -28,6 +31,7 @@
     "defaultPrompt": [
       "Turn this source note into social drafts.",
       "Cross-check these platform drafts.",
+      "Render these carousel prompts as PNG files.",
       "Preview my content before publishing."
     ],
     "brandColor": "#2563EB"

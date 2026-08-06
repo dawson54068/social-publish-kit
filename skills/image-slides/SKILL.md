@@ -13,4 +13,4 @@ Read `references/config-contract.md` when configuration is supplied. A configure
 
 Create one prompt file per slide in the caller's chosen output directory. Use zero-padded names such as `01-cover.prompt.txt`. Never insert a personal handle, logo, domain, or signature unless the user supplies it in the current request or config.
 
-Before rendering, list the slide order and flag any source detail that is ambiguous. Do not invent text to fill a slide.
+Before rendering, list the slide order and flag any source detail that is ambiguous. Do not invent text to fill a slide. If the user asks to render the prompts, hand the prompt folder to `image-gen`; this skill plans the carousel, while `image-gen` produces PNG files.

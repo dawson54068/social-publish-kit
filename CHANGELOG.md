@@ -6,6 +6,10 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 
 ## [Unreleased]
 
+### Added
+
+- Added `image-gen`, a provider-backed PNG rendering skill with Codex host-tool and Gemini browser-automation backends.
+
 ## [1.0.0] - 2026-08-06
 
 ### Added

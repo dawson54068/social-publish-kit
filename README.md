@@ -1,6 +1,6 @@
 # Social Publish Kit
 
-Social Publish Kit 是一個可攜式社群寫作外掛。它把通用的寫作技能和受保護的本機瀏覽器工作流程包在一起，用來替 Threads、Facebook、LinkedIn 產生草稿、驗證內容，並在你明確確認後才選擇性發佈。
+Social Publish Kit 是一個可攜式社群寫作外掛。它把通用的寫作技能、圖片產生技能，和受保護的本機瀏覽器工作流程包在一起，用來替 Threads、Facebook、LinkedIn 產生草稿、驗證內容，並在你明確確認後才選擇性發佈。
 
 English version: [README.en.md](README.en.md)
 
@@ -21,7 +21,8 @@ English version: [README.en.md](README.en.md)
 - `threads-optimizer`、`facebook-optimizer`、`linkedin-optimizer`：依平台改寫社群貼文。
 - `source-crosscheck`：在審稿或發佈前，檢查草稿是否忠於原始內容。
 - `proofreading`：進行臺灣繁體中文的用字、術語與格式校對。
-- `image-prompt`、`image-slides`：產生文字精準的社群圖片或輪播圖提示詞。
+- `image-prompt`、`image-slides`：產生文字精準的社群圖片提示詞與輪播圖提示詞。
+- `image-gen`：把提示詞實際渲染成 PNG；預設使用 Codex 圖片工具，必要時可改用 Gemini 瀏覽器自動化後端。
 - `social-browser-publisher`：引導本機預覽、登入設定，以及瀏覽器發佈流程。
 
 ## 安全模型
@@ -51,6 +52,8 @@ corepack yarn setup-browser --platforms threads,facebook,linkedin
 
 它會開啟一個獨立的持久化瀏覽器設定檔，讓你手動登入。這是給初次使用者的安全設定路徑；不要重用或複製你日常使用的瀏覽器設定檔。
 
+如果要使用 `image-gen` 的 Gemini 後端，請先用 Chrome debug profile 登入 Gemini。預設路徑是 `~/.chrome-debug-profile`；需要改路徑時，可以使用 `GEMINI_CHROME_PROFILE_DIR` 或 `--profile-dir`。Codex 後端則取決於你的 agent runtime 是否提供圖片產生工具，這不是本機 Node script。
+
 將 `config.example.json` 複製成 `config.json` 後再調整內容。如果 `config.json` 裡包含帳號名稱或內部網址，請把它留在本機，不要提交到 Git。
 
 設定合約寫在 `docs/config-contract.md`。它取代原本專案裡硬編碼的網域、作者、內容 ID、分析資料、語氣設定與瀏覽器設定。即使完全沒有設定檔，這些技能仍可運作；缺少的選用行為會直接省略。
@@ -71,7 +74,7 @@ content/<id>/
   threads.md
   facebook.md
   linkedin.md
-  slides/                # 選用的 PNG/JPEG/WebP 檔案
+  slides/                # 選用的 .prompt.txt、PNG、JPEG、WebP 檔案
 ```
 
 先用內建技能建立草稿，再執行：
@@ -82,6 +85,12 @@ corepack yarn workflow --content-dir content/example --publish --yes
 ```
 
 Windows 使用者可以改用 `workflow\\run.cmd` 或 `workflow\\run.ps1`，參數相同。如果想指定瀏覽器設定檔位置，可以設定 `SOCIAL_BROWSER_PROFILE_DIR` 或傳入 `--profile-dir`。
+
+用 Gemini 後端渲染單張圖片時，可以從專案根目錄執行：
+
+```text
+node skills/image-gen/scripts/gemini-cdp-image.mjs --prompt-file content/example/slides/01-cover.prompt.txt --output content/example/slides/01-cover.png --no-headless
+```
 
 ## 隱私邊界
 

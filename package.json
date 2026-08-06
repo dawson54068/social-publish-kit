@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
-  "description": "Portable social-writing skills and a gated browser publishing workflow.",
+  "description": "Portable social-writing and image-generation skills with a gated browser publishing workflow.",
   "scripts": {
     "workflow": "node workflow/run.mjs",
     "setup-browser": "node workflow/setup-browser.mjs",

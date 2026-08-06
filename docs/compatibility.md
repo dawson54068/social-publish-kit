@@ -4,6 +4,7 @@ There are two different compatibility questions:
 
 1. Can the agent install the plugin or read the bundled `SKILL.md` instructions?
 2. Can the runtime execute Node/Playwright and access a local browser profile?
+3. Can the runtime expose a host image generation tool for the `image-gen` Codex backend?
 
 | Runtime | Install or read the skills | Run this package's local browser publisher |
 |---|---|---|
@@ -17,6 +18,8 @@ There are two different compatibility questions:
 The preferred portable unit is the plugin root: the directory containing `.codex-plugin/plugin.json`, `.claude-plugin/plugin.json`, `skills/`, `workflow/`, and docs. The fallback portable unit is an individual skill folder: `SKILL.md` plus resources inside that folder. Do not rely on package-root files from inside an individual skill. This package therefore duplicates the small config contract into each skill's `references/` directory.
 
 The browser publisher is intentionally a local-runtime feature. A web chat session cannot be promised access to a user's `C:\` or `/Users/` filesystem, installed Node packages, or an already-authenticated browser profile. In those environments, use the skills to create and validate drafts, then run `workflow/run.mjs` on the user's own computer.
+
+`image-gen` has the same portability split. Its Codex backend is a host capability: it works only when the active runtime exposes an image generation tool. Its Gemini backend is local browser automation: it needs Node, Playwright, Chrome or Chromium, and a logged-in Gemini debug profile. Prompt planning with `image-prompt` and `image-slides` remains portable even when neither image backend is available.
 
 ## Install locations
 
