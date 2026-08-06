@@ -9,6 +9,8 @@ The format is based on Keep a Changelog, and this project follows Semantic Versi
 ### Added
 
 - Added `image-gen`, a provider-backed PNG rendering skill with Codex host-tool and Gemini browser-automation backends.
+- Added `social-content-pipeline`, an orchestration skill that mirrors the prepare/review/publish split used by the private content pipeline.
+- Added `corepack yarn image-gen` and `corepack yarn workflow --render-images` for local Gemini rendering of `slides/*.prompt.txt`.
 
 ## [1.0.0] - 2026-08-06
 

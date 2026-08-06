@@ -6,8 +6,9 @@ description: Render text prompts into standalone PNG files using Codex image gen
 # Image Gen
 
 Render a text prompt into a PNG. This skill owns image **generation**; `image-prompt`
-and `image-slides` own prompt planning. Do not invent content while rendering. If
-the prompt specifies on-image text, preserve that text exactly.
+and `image-slides` own prompt planning, and `social-content-pipeline` owns the
+end-to-end social workflow. Do not invent content while rendering. If the prompt
+specifies on-image text, preserve that text exactly.
 
 ## Providers
 
@@ -43,6 +44,15 @@ Gemini is a browser-automation provider.
 
 Batch mode is single-image mode applied per prompt file with the same provider
 and the same verification step.
+
+For Social Publish Kit content folders, the local Gemini workflow command is:
+
+```text
+corepack yarn image-gen --prompt-dir content/<id>/slides --provider gemini --no-headless
+```
+
+Codex rendering is agent-mediated through the host image tool; it is not
+available as a local Node renderer.
 
 ## Prompt Rules
 

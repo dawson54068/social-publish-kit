@@ -7,6 +7,10 @@
   "cta_policy": "use_explicit_url_only",
   "analytics_file": null,
   "voice_file": null,
+  "image_provider": "gemini",
+  "image_profile_dir": null,
+  "image_timeout_seconds": 300,
+  "image_chrome_path": null,
   "browser_profile_dir": ".social-browser-profile",
   "publishers_enabled": false
 }

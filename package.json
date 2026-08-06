@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
-  "description": "Portable social-writing and image-generation skills with a gated browser publishing workflow.",
+  "description": "Portable social-writing and image-generation skills with a gated prepare/review/publish workflow.",
   "scripts": {
     "workflow": "node workflow/run.mjs",
+    "image-gen": "node workflow/scripts/render-images.mjs",
     "setup-browser": "node workflow/setup-browser.mjs",
     "publish": "node workflow/scripts/publish.mjs",
     "check": "node workflow/run.mjs --dry-run"

@@ -56,10 +56,14 @@ const TIMEOUT_SECONDS = parseInt(args.timeout, 10);
 const POLL_INTERVAL_MS = 5000;
 const MAX_POLLS = Math.ceil((TIMEOUT_SECONDS * 1000) / POLL_INTERVAL_MS);
 const HEADLESS = !args['no-headless'];
-const CHROME_PATH = args['chrome-path'] ?? process.env.CHROME_PATH ?? process.env.CHROME_BIN ?? findChromeExecutable();
-const USER_DATA_DIR = args['profile-dir'] ?? process.env.GEMINI_CHROME_PROFILE_DIR ?? join(homedir(), '.chrome-debug-profile');
+const CHROME_PATH = expandHome(args['chrome-path'] ?? process.env.CHROME_PATH ?? process.env.CHROME_BIN) ?? findChromeExecutable();
+const USER_DATA_DIR = expandHome(args['profile-dir'] ?? process.env.GEMINI_CHROME_PROFILE_DIR) ?? join(homedir(), '.chrome-debug-profile');
 
 let chromeProcess = null;
+
+function expandHome(path) {
+  return path?.startsWith('~/') ? join(homedir(), path.slice(2)) : path;
+}
 
 function findChromeExecutable() {
   const candidates = [];

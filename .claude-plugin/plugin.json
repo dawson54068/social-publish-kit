@@ -1,7 +1,7 @@
 {
   "name": "social-publish-kit",
   "version": "1.0.0",
-  "description": "Social-writing and image-generation skills with a local browser workflow for drafting, validating, and optionally publishing Threads, Facebook, and LinkedIn posts.",
+  "description": "Social-writing and image-generation skills with a two-stage prepare/review/publish browser workflow for Threads, Facebook, and LinkedIn posts.",
   "author": {
     "name": "Dawson Wang"
   },

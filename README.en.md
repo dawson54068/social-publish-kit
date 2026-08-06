@@ -21,6 +21,7 @@ This repository is structured as a shareable plugin:
 - `proofreading` performs a Taiwan Traditional Chinese language and consistency pass.
 - `image-prompt` and `image-slides` create text-accurate social image and carousel prompts.
 - `image-gen` renders prompts into PNG files; it defaults to a Codex image tool when the host runtime exposes one and can use the Gemini browser-automation backend when requested or needed.
+- `social-content-pipeline` runs the full source-to-drafts-to-images-to-preview workflow, then stops for human approval before publishing.
 - `social-browser-publisher` guides local preview, login setup, and browser-based publishing.
 
 ## Safety model
@@ -73,6 +74,7 @@ Use the bundled skills to create the drafts, then run:
 
 ```text
 corepack yarn workflow --content-dir content/example
+corepack yarn workflow --content-dir content/example --render-images --image-provider gemini
 corepack yarn workflow --content-dir content/example --publish --yes
 ```
 
@@ -83,6 +85,14 @@ To render one image with the Gemini backend from the project root:
 ```text
 node skills/image-gen/scripts/gemini-cdp-image.mjs --prompt-file content/example/slides/01-cover.prompt.txt --output content/example/slides/01-cover.png --no-headless
 ```
+
+To render a whole `slides/` folder:
+
+```text
+corepack yarn image-gen --prompt-dir content/example/slides --provider gemini --no-headless
+```
+
+For Codex image generation, use the `image-gen` skill in an agent runtime that exposes an image generation tool. The local Node workflow only provides the Gemini browser-automation backend.
 
 ## Privacy boundary
 

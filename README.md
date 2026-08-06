@@ -23,6 +23,7 @@ English version: [README.en.md](README.en.md)
 - `proofreading`：進行臺灣繁體中文的用字、術語與格式校對。
 - `image-prompt`、`image-slides`：產生文字精準的社群圖片提示詞與輪播圖提示詞。
 - `image-gen`：把提示詞實際渲染成 PNG；預設使用 Codex 圖片工具，必要時可改用 Gemini 瀏覽器自動化後端。
+- `social-content-pipeline`：把 `source.md` 串成草稿、校對、圖片、預覽與人工確認後發佈的完整流程。
 - `social-browser-publisher`：引導本機預覽、登入設定，以及瀏覽器發佈流程。
 
 ## 安全模型
@@ -81,6 +82,7 @@ content/<id>/
 
 ```text
 corepack yarn workflow --content-dir content/example
+corepack yarn workflow --content-dir content/example --render-images --image-provider gemini
 corepack yarn workflow --content-dir content/example --publish --yes
 ```
 
@@ -91,6 +93,14 @@ Windows 使用者可以改用 `workflow\\run.cmd` 或 `workflow\\run.ps1`，參�
 ```text
 node skills/image-gen/scripts/gemini-cdp-image.mjs --prompt-file content/example/slides/01-cover.prompt.txt --output content/example/slides/01-cover.png --no-headless
 ```
+
+渲染整個 `slides/` 資料夾時，使用工作流程命令：
+
+```text
+corepack yarn image-gen --prompt-dir content/example/slides --provider gemini --no-headless
+```
+
+如果使用 Codex 圖片工具，請透過 `image-gen` 技能在支援圖片產生工具的 agent runtime 中執行；本機 Node 工作流程只提供 Gemini 瀏覽器自動化後端。
 
 ## 隱私邊界
 
