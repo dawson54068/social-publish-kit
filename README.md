@@ -1,61 +1,69 @@
 # Social Publish Kit
 
-Social Publish Kit is a portable plugin for social-writing workflows. It packages generic skills plus a gated local browser workflow for drafting, validating, and optionally publishing Threads, Facebook, and LinkedIn posts.
+Social Publish Kit 是一個可攜式社群寫作外掛。它把通用的寫作技能和受保護的本機瀏覽器工作流程包在一起，用來替 Threads、Facebook、LinkedIn 產生草稿、驗證內容，並在你明確確認後才選擇性發佈。
 
-It has no account tokens, private analytics, personal brand files, local absolute paths, or publisher-specific profile names.
+English version: [README.en.md](README.en.md)
 
-## Plugin layout
+這個專案不包含帳號 token、私人分析資料、個人品牌檔案、本機絕對路徑，或特定發佈者的個人檔案名稱。
 
-This repository is structured as a shareable plugin:
+## 外掛結構
 
-- `.codex-plugin/plugin.json` describes the plugin for Codex-compatible installs.
-- `.claude-plugin/plugin.json` describes the same skill bundle for Claude Code-compatible installs.
-- `skills/` contains the portable skill folders.
-- `workflow/` contains the optional local Node/Playwright runner.
+這個 repository 是一個可分享的外掛：
 
-## Included skills
+- `.codex-plugin/plugin.json`：給相容 Codex 的執行環境使用。
+- `.claude-plugin/plugin.json`：給相容 Claude Code 的執行環境使用。
+- `skills/`：可攜式技能資料夾。
+- `workflow/`：選用的本機 Node/Playwright 執行器。
 
-- `platform-adapter` converts one canonical `source.md` into platform-specific drafts while preserving facts.
-- `threads-optimizer`, `facebook-optimizer`, and `linkedin-optimizer` rewrite source material for each platform.
-- `source-crosscheck` checks generated drafts against the canonical source before review or publishing.
-- `proofreading` performs a Taiwan Traditional Chinese language and consistency pass.
-- `image-prompt` and `image-slides` create text-accurate social image and carousel prompts.
-- `social-browser-publisher` guides local preview, login setup, and browser-based publishing.
+## 內含技能
 
-## Safety model
+- `platform-adapter`：把單一 `source.md` 轉成不同平台的草稿，並保留原始事實。
+- `threads-optimizer`、`facebook-optimizer`、`linkedin-optimizer`：依平台改寫社群貼文。
+- `source-crosscheck`：在審稿或發佈前，檢查草稿是否忠於原始內容。
+- `proofreading`：進行臺灣繁體中文的用字、術語與格式校對。
+- `image-prompt`、`image-slides`：產生文字精準的社群圖片或輪播圖提示詞。
+- `social-browser-publisher`：引導本機預覽、登入設定，以及瀏覽器發佈流程。
 
-`node workflow/run.mjs --content-dir content/<id>` validates and previews only. Nothing is published unless all of these are true:
+## 安全模型
 
-1. The platform draft files exist and pass length checks.
-2. `config.json` sets `publishers_enabled` to `true` (or `--force` is explicitly used).
-3. The command includes both `--publish` and `--yes`.
+`node workflow/run.mjs --content-dir content/<id>` 只會驗證與預覽。只有在以下條件全部成立時，才會發佈內容：
 
-The workflow uses a dedicated persistent Playwright browser profile. It does not attach to or close the user's normal Chrome profile. Log in to each platform once in that dedicated profile, then reuse it. Platform UIs change; inspect the browser manually if a selector error occurs.
+1. 平台草稿檔案存在，而且通過長度檢查。
+2. `config.json` 將 `publishers_enabled` 設為 `true`，或你明確使用 `--force`。
+3. 指令同時包含 `--publish` 和 `--yes`。
 
-## Setup
+這個工作流程會使用專用的 Playwright 持久化瀏覽器設定檔，不會附掛、複製或關閉你平常使用的 Chrome 設定檔。第一次使用時，請在這個專用設定檔中登入各平台，之後即可重複使用。平台介面可能改版；如果選擇器發生錯誤，請先手動檢查瀏覽器畫面。
 
-Requires Node.js 20+, Playwright, and `tsx` for the optional TypeScript helper. From this directory:
+## 設定
+
+需要 Node.js 20+、Playwright，以及選用 TypeScript 輔助工具所需的 `tsx`。在專案根目錄執行：
 
 ```text
 corepack yarn install
 corepack yarn playwright install chromium
 ```
 
-For first-time browser login, run `corepack yarn setup-browser --platforms threads,facebook,linkedin`. It opens a separate persistent profile for manual login. This is the beginner-facing setup path; do not reuse or copy your ordinary daily browser profile.
+第一次設定瀏覽器登入時，執行：
 
-Copy `config.example.json` to `config.json`, then change the values. Keep `config.json` private if it contains an account handle or internal URL.
+```text
+corepack yarn setup-browser --platforms threads,facebook,linkedin
+```
 
-The configuration contract is documented in `docs/config-contract.md`. It is the replacement for the original project's hard-coded domain, author, content ID, analytics, voice, and browser settings. The same skills work with no config at all; optional behavior is simply omitted.
+它會開啟一個獨立的持久化瀏覽器設定檔，讓你手動登入。這是給初次使用者的安全設定路徑；不要重用或複製你日常使用的瀏覽器設定檔。
 
-See `docs/compatibility.md` for the difference between instruction compatibility and actual local-browser automation support across ChatGPT, Claude, Gemini CLI, and Antigravity.
+將 `config.example.json` 複製成 `config.json` 後再調整內容。如果 `config.json` 裡包含帳號名稱或內部網址，請把它留在本機，不要提交到 Git。
 
-## Install as a plugin
+設定合約寫在 `docs/config-contract.md`。它取代原本專案裡硬編碼的網域、作者、內容 ID、分析資料、語氣設定與瀏覽器設定。即使完全沒有設定檔，這些技能仍可運作；缺少的選用行為會直接省略。
 
-When this repository is shared or cloned, install the plugin root through the plugin mechanism supported by your agent runtime. The plugin root is the repository directory containing `.codex-plugin/plugin.json`, `.claude-plugin/plugin.json`, and `skills/`.
+相容性差異請看 `docs/compatibility.md`，其中說明 ChatGPT、Claude、Gemini CLI、Antigravity 等環境在「能否讀取技能指令」與「能否執行本機瀏覽器自動化」上的差別。
 
-For runtimes that only support loose skill folders, copy or link the individual folders under `skills/` into the runtime's project or global skills directory.
+## 作為外掛安裝
 
-## Content layout
+分享或 clone 這個 repository 後，請用你的 agent runtime 支援的外掛機制安裝專案根目錄。外掛根目錄就是同時包含 `.codex-plugin/plugin.json`、`.claude-plugin/plugin.json` 和 `skills/` 的資料夾。
+
+如果你的執行環境只支援鬆散的技能資料夾，請把 `skills/` 底下的個別資料夾複製或連結到該 runtime 的專案或全域技能目錄。
+
+## 內容資料夾
 
 ```text
 content/<id>/
@@ -63,30 +71,30 @@ content/<id>/
   threads.md
   facebook.md
   linkedin.md
-  slides/                # optional PNG/JPEG/WebP files
+  slides/                # 選用的 PNG/JPEG/WebP 檔案
 ```
 
-Use the bundled skills to create the drafts, then run:
+先用內建技能建立草稿，再執行：
 
 ```text
 corepack yarn workflow --content-dir content/example
 corepack yarn workflow --content-dir content/example --publish --yes
 ```
 
-On Windows, use `workflow\\run.cmd` or `workflow\\run.ps1` with the same arguments. A custom browser profile can be supplied with `SOCIAL_BROWSER_PROFILE_DIR` or `--profile-dir`.
+Windows 使用者可以改用 `workflow\\run.cmd` 或 `workflow\\run.ps1`，參數相同。如果想指定瀏覽器設定檔位置，可以設定 `SOCIAL_BROWSER_PROFILE_DIR` 或傳入 `--profile-dir`。
 
-## Privacy boundary
+## 隱私邊界
 
-Do not commit `config.json`, real content directories, browser profiles, screenshots, analytics, tokens, or publish results. The included `.gitignore` is a baseline, not a substitute for reviewing `git diff` before sharing.
+不要提交 `config.json`、真實內容資料夾、瀏覽器設定檔、截圖、分析資料、token 或發佈結果。內建 `.gitignore` 是基準防線，不是取代你在分享前檢查 `git diff` 的理由。
 
-## Contributing
+## 貢獻
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Keep changes generic: no private account data, analytics, browser profiles, local usernames, hard-coded domains, or unpublished content.
+請先閱讀 [CONTRIBUTING.md](CONTRIBUTING.md)。所有變更都應保持通用：不要加入私人帳號資料、分析資料、瀏覽器設定檔、本機使用者名稱、硬編碼網域，或尚未公開的內容。
 
-## Security
+## 安全性
 
-Report security issues privately through the repository's security advisory channel. See [SECURITY.md](SECURITY.md). Do not open public issues containing credentials, cookies, browser profile contents, or private content.
+安全性問題請透過 repository 的安全通報管道私下回報，詳見 [SECURITY.md](SECURITY.md)。不要在公開 issue 中貼上憑證、cookies、瀏覽器設定檔內容或私人內容。
 
-## License
+## 授權
 
-Released under the MIT License. See [LICENSE](LICENSE).
+本專案採用 MIT License。詳見 [LICENSE](LICENSE)。
