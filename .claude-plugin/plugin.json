@@ -1,0 +1,18 @@
+{
+  "name": "social-publish-kit",
+  "version": "1.0.0",
+  "description": "Social-writing skills and a local browser workflow for drafting, validating, and optionally publishing Threads, Facebook, and LinkedIn posts.",
+  "author": {
+    "name": "Dawson Wang"
+  },
+  "license": "MIT",
+  "keywords": [
+    "social",
+    "publishing",
+    "skills",
+    "threads",
+    "facebook",
+    "linkedin"
+  ],
+  "skills": "./skills"
+}

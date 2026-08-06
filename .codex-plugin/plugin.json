@@ -1,0 +1,35 @@
+{
+  "name": "social-publish-kit",
+  "version": "1.0.0",
+  "description": "Social-writing skills and a local browser workflow for drafting, validating, and optionally publishing Threads, Facebook, and LinkedIn posts.",
+  "author": {
+    "name": "Dawson Wang"
+  },
+  "license": "MIT",
+  "keywords": [
+    "social",
+    "publishing",
+    "skills",
+    "threads",
+    "facebook",
+    "linkedin"
+  ],
+  "skills": "./skills",
+  "interface": {
+    "displayName": "Social Publish Kit",
+    "shortDescription": "Draft, validate, and optionally publish social posts.",
+    "longDescription": "A portable skill bundle for turning canonical source notes into Threads, Facebook, and LinkedIn drafts, cross-checking facts, proofreading Traditional Chinese, and running a gated local browser publishing workflow.",
+    "developerName": "Dawson Wang",
+    "category": "Productivity",
+    "capabilities": [
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Turn this source note into social drafts.",
+      "Cross-check these platform drafts.",
+      "Preview my content before publishing."
+    ],
+    "brandColor": "#2563EB"
+  }
+}

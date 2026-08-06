@@ -1,0 +1,16 @@
+{
+  "name": "social-publish-kit",
+  "version": "1.0.0",
+  "type": "module",
+  "license": "MIT",
+  "description": "Portable social-writing skills and a gated browser publishing workflow.",
+  "scripts": {
+    "workflow": "node workflow/run.mjs",
+    "setup-browser": "node workflow/setup-browser.mjs",
+    "publish": "node workflow/scripts/publish.mjs",
+    "check": "node workflow/run.mjs --dry-run"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": { "playwright": "^1.57.0" },
+  "devDependencies": { "tsx": "^4.19.2" }
+}

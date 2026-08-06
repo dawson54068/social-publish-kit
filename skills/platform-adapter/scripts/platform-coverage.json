@@ -1,0 +1,5 @@
+{
+  "threads": { "maxCharsPerPost": 500 },
+  "facebook": { "maxChars": 63206 },
+  "linkedin": { "maxChars": 3000 }
+}

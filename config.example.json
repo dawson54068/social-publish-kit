@@ -1,0 +1,12 @@
+{
+  "project_name": "Your Content Project",
+  "content_root": "content",
+  "platforms": ["threads", "facebook", "linkedin"],
+  "site_url_template": "https://example.com/posts/{id}",
+  "author_handle": "@your_handle",
+  "cta_policy": "use_explicit_url_only",
+  "analytics_file": null,
+  "voice_file": null,
+  "browser_profile_dir": ".social-browser-profile",
+  "publishers_enabled": false
+}
