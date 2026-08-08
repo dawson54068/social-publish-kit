@@ -53,7 +53,9 @@ corepack yarn setup-browser --platforms threads,facebook,linkedin
 
 它會開啟一個獨立的持久化瀏覽器設定檔，讓你手動登入。這是給初次使用者的安全設定路徑；不要重用或複製你日常使用的瀏覽器設定檔。
 
-如果要使用 `image-gen` 的 Gemini 後端，請先用 Chrome debug profile 登入 Gemini。預設路徑是 `~/.chrome-debug-profile`；需要改路徑時，可以使用 `GEMINI_CHROME_PROFILE_DIR` 或 `--profile-dir`。Codex 後端則取決於你的 agent runtime 是否提供圖片產生工具，這不是本機 Node script。
+這個專案裡有兩個都叫 Gemini、但彼此無關的東西：Gemini CLI 和 Antigravity 是負責讀取這些技能、並提供 shell 的執行環境；`image-gen` 的 Gemini 後端則是用 Playwright 操作 Gemini 網頁版。在 Gemini CLI 裡執行這個外掛，並不會因此得到圖片後端；而且這兩個執行環境目前都沒有文件說明它們會對技能提供圖片產生工具，所以在它們裡面使用 `image-gen` 時，通常會改用瀏覽器後端。
+
+如果要使用 `image-gen` 的 Gemini 後端，請先用 Chrome debug profile 登入 Gemini。預設路徑是 `~/.chrome-debug-profile`；需要改路徑時，可以使用 `GEMINI_CHROME_PROFILE_DIR` 或 `--profile-dir`。這個設定檔和發佈流程專用的 Playwright 設定檔不同，兩邊要各自登入。Codex 後端則取決於你的 agent runtime 是否提供圖片產生工具，這不是本機 Node script。
 
 將 `config.example.json` 複製成 `config.json` 後再調整內容。如果 `config.json` 裡包含帳號名稱或內部網址，請把它留在本機，不要提交到 Git。
 
@@ -63,9 +65,38 @@ corepack yarn setup-browser --platforms threads,facebook,linkedin
 
 ## 作為外掛安裝
 
+### Codex 與 Claude Code
+
 分享或 clone 這個 repository 後，請用你的 agent runtime 支援的外掛機制安裝專案根目錄。外掛根目錄就是同時包含 `.codex-plugin/plugin.json`、`.claude-plugin/plugin.json` 和 `skills/` 的資料夾。
 
 如果你的執行環境只支援鬆散的技能資料夾，請把 `skills/` 底下的個別資料夾複製或連結到該 runtime 的專案或全域技能目錄。
+
+### Gemini CLI 與 Antigravity
+
+這兩個執行環境都不會讀取 `plugin.json`，而是只載入個別的技能資料夾，所以上面的外掛根目錄安裝方式在這裡不適用。
+
+請先 clone 這個 repository、在該副本裡安裝相依套件，再把技能資料夾連結到執行環境的技能目錄。這裡要用連結而不是複製：`workflow/run.mjs` 和 `package.json` 位於專案根目錄，在 `skills/` 之外；如果只複製技能資料夾，`social-browser-publisher` 就找不到可以執行的專案根目錄。
+
+```text
+git clone <repository-url> ~/.agents/social-publish-kit
+cd ~/.agents/social-publish-kit
+corepack yarn install
+corepack yarn playwright install chromium
+
+# Gemini CLI，使用者層級
+mkdir -p ~/.agents/skills
+for d in skills/*/; do ln -sfn "$PWD/${d%/}" ~/.agents/skills/"$(basename "$d")"; done
+
+# Antigravity，全域層級
+mkdir -p ~/.gemini/config/skills
+for d in skills/*/; do ln -sfn "$PWD/${d%/}" ~/.gemini/config/skills/"$(basename "$d")"; done
+```
+
+Gemini CLI 的使用者技能目錄是 `~/.gemini/skills/` 或 `~/.agents/skills/`，專案技能目錄則是 `.gemini/skills/` 或 `.agents/skills/`；同一層級裡 `.agents/` 優先。可以用 `/skills list` 確認是否載入，改過技能之後用 `/skills reload` 重新讀取。`gemini skills install <git-url> --consent --path skills/<name> --scope user` 也可以用，但它會把資料夾複製出來，因此一樣會失去專案根目錄的執行器。
+
+Antigravity 沒有安裝指令，也沒有安裝介面，請把資料夾放進或連結到專案的 `.agents/skills/`，或全域的 `~/.gemini/config/skills/`。全域路徑要用後者，IDE、CLI 與 agent 三種形式都認得它；它和 Gemini CLI 的使用者目錄不是同一個位置。
+
+在依賴這個做法之前，請先確認你安裝的版本支援 symlink。如果不支援，請改成複製資料夾，並從 clone 出來的專案根目錄執行工作流程指令。
 
 ## 內容資料夾
 

@@ -45,7 +45,9 @@ corepack yarn playwright install chromium
 
 For first-time browser login, run `corepack yarn setup-browser --platforms threads,facebook,linkedin`. It opens a separate persistent profile for manual login. This is the beginner-facing setup path; do not reuse or copy your ordinary daily browser profile.
 
-For the `image-gen` Gemini backend, log in to Gemini with the Chrome debug profile first. The default profile is `~/.chrome-debug-profile`; override it with `GEMINI_CHROME_PROFILE_DIR` or `--profile-dir`. The Codex backend depends on the host agent runtime exposing an image generation tool; it is not a local Node script.
+Two unrelated things in this repository are called Gemini. Gemini CLI and Antigravity are host runtimes that read these skills and run the shell. The `image-gen` Gemini backend is Playwright automation against the Gemini web app. Running the kit inside Gemini CLI does not supply the image backend, and neither runtime is documented as exposing a host image generation tool, so expect `image-gen` to fall through to the browser backend there.
+
+For the `image-gen` Gemini backend, log in to Gemini with the Chrome debug profile first. The default profile is `~/.chrome-debug-profile`; override it with `GEMINI_CHROME_PROFILE_DIR` or `--profile-dir`. This is a different profile from the publisher's dedicated Playwright profile, so the two need separate logins. The Codex backend depends on the host agent runtime exposing an image generation tool; it is not a local Node script.
 
 Copy `config.example.json` to `config.json`, then change the values. Keep `config.json` private if it contains an account handle or internal URL.
 
@@ -55,9 +57,38 @@ See `docs/compatibility.md` for the difference between instruction compatibility
 
 ## Install as a plugin
 
+### Codex and Claude Code
+
 When this repository is shared or cloned, install the plugin root through the plugin mechanism supported by your agent runtime. The plugin root is the repository directory containing `.codex-plugin/plugin.json`, `.claude-plugin/plugin.json`, and `skills/`.
 
 For runtimes that only support loose skill folders, copy or link the individual folders under `skills/` into the runtime's project or global skills directory.
+
+### Gemini CLI and Antigravity
+
+Neither runtime reads the plugin manifests. Both load individual skill folders, so the plugin-root install path above does not apply.
+
+Clone the repository once, install the dependencies in that clone, then link the skill folders into the runtime's skills directory. Linking rather than copying matters: `workflow/run.mjs` and `package.json` live at the repository root, outside `skills/`, so a copied skill folder leaves `social-browser-publisher` with no package root to run.
+
+```text
+git clone <repository-url> ~/.agents/social-publish-kit
+cd ~/.agents/social-publish-kit
+corepack yarn install
+corepack yarn playwright install chromium
+
+# Gemini CLI, user scope
+mkdir -p ~/.agents/skills
+for d in skills/*/; do ln -sfn "$PWD/${d%/}" ~/.agents/skills/"$(basename "$d")"; done
+
+# Antigravity, global scope
+mkdir -p ~/.gemini/config/skills
+for d in skills/*/; do ln -sfn "$PWD/${d%/}" ~/.gemini/config/skills/"$(basename "$d")"; done
+```
+
+Gemini CLI reads user skills from `~/.gemini/skills/` or `~/.agents/skills/`, and workspace skills from `.gemini/skills/` or `.agents/skills/`; within a tier the `.agents/` alias wins. Run `/skills list` to confirm discovery and `/skills reload` after editing a skill. `gemini skills install <git-url> --consent --path skills/<name> --scope user` also works, but it copies the folder out of the clone and therefore loses the root runner.
+
+Antigravity has no install command or UI. Place or link the folders under workspace `.agents/skills/` or global `~/.gemini/config/skills/`; the global path is the one recognized by the IDE, the CLI, and the agent alike, and it is not the same directory as the Gemini CLI user alias.
+
+Confirm that your installed version follows symlinks before depending on this layout. If it does not, copy the folders instead and run the workflow commands from the clone.
 
 ## Content layout
 
